@@ -17,7 +17,7 @@ const cadastrarMeta = async () => {
         return
     }
     metas.push({ value: meta, checked: false })
-}
+};
 
 const listarMetas = async () => {
     const respostas = await checkbox({
@@ -59,8 +59,26 @@ const metasRealizadas = async () => {
      }
 
      await select({
-        message: "Metas Realizadas",
+        message: "Metas Realizadas " + realizadas.length,
         choices: [...realizadas]
+     })
+
+}
+
+const metasAbertas = async () => {
+    const abertas = metas.filter(( meta ) => { 
+        // Outro farma !meta.checked = altera o valro do boleano...
+        return meta.checked != true
+     })
+
+     if(abertas.length == 0){
+        console.log("Não existem metas Abertas!")
+        return
+     }
+
+     await select({
+        message: "Metas Abertas " + abertas.length,
+        choices: [...abertas]
      })
 
 }
@@ -85,6 +103,10 @@ const start = async () => {
                     value: "realizadas"
                 },
                 {
+                    name: "Metas Abertas",
+                    value: "abertas"
+                },
+                {
                     name: "Sair",
                     value: "sair"
                 }
@@ -93,7 +115,7 @@ const start = async () => {
 
         switch(opcao){
             case "cadastrar":
-                await cadastrarMetas();
+                await cadastrarMeta();
                 console.log(metas);
                 break;
             case "listar":
@@ -101,6 +123,9 @@ const start = async () => {
                 break;
             case "realizadas":
                 await metasRealizadas();
+                break;
+            case "abertas":
+                await metasAbertas();
                 break;
             case "sair":
                 console.log("Até a próxima! Tenha um otimo dia e realize todas as suas metas!")
