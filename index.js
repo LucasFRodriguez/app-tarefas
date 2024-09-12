@@ -1,14 +1,24 @@
 // Biblioteca INQUIRER
 const { select, input, checkbox } = require('@inquirer/prompts');
+const fs = require("fs").promises
 
 let mensagem = "Bem vindo ao App de Metas!";
 
-let meta = {
-    value: 'Criar novas metas!',
-    checked: false,
-};
+let metas;
 
-let metas = [ meta ];
+const carregarMetas = async () => {
+    try{ 
+        const dados = await fs.readFile("metas.json" , "utf-8")
+        metas = JSON.parse(dados)
+    }
+    catch( erro ){ 
+        metas = []
+    }
+}
+
+const salvarMetas = async () => {
+    await fs.writeFile("metas.json", JSON.stringify(metas, null, 2))
+}
 
 const cadastrarMeta = async () => {
     const meta = await input({message: "Digite sua nova meta:"})
@@ -122,6 +132,8 @@ const mostrarMensagem = () => {
 }
 
 const start = async () => {
+    carregarMetas();
+    await salvarMetas();
     
     while(true){
         mostrarMensagem();
